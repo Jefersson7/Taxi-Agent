@@ -30,6 +30,7 @@ public class Model {
         ArrayList<ArrayList<Integer>> pop = new ArrayList<ArrayList<Integer>>();
         ArrayList<ArrayList<Integer>> newpop = new ArrayList<ArrayList<Integer>>();
         ArrayList<Double> Fitness = new ArrayList<Double>(); 
+        int [][] hashMove = {{0,1,-1,0,0},{-1,0,0,1,0}};
  	
 	public Model() {
 		
@@ -63,13 +64,12 @@ public class Model {
 	}
         //Generates a movement population.
         public void generarPoblacion(Nodo initial, Nodo fin){
-            int [][] hashMove = {{0,1,-1,0,0},{-1,0,0,1,0}};
             Random rmd = new Random();
-            for(int i=0;i<80;i++){
+            for(int i=0;i<1;i++){
                 int x = initial.getI();
                 int y = initial.getJ();
                 ArrayList<Integer> mov = new ArrayList<Integer>();
-                for (int j=0;j<100;j++){
+                for (int j=0;j<10;j++){
                     int mv = rmd.nextInt(5);
                     while(!isMovementValid(x,y,mv)){
                         mv = rmd.nextInt(5);
@@ -78,7 +78,7 @@ public class Model {
                     y += hashMove[1][mv];
                     mov.add(mv);
                 }
-                while(!isValid(initial, fin, mov)){
+                /*while(!isValid(initial, fin, mov)){
                     mov.clear();
                     x = initial.getI();
                     y = initial.getJ();
@@ -91,7 +91,9 @@ public class Model {
                         y+=hashMove[1][mv];
                         mov.add(rmd.nextInt(5));
                     }
-                }
+                   
+                }*/
+                System.out.println(mov);
                 pop.add(mov);
             }
         }
@@ -99,7 +101,7 @@ public class Model {
         public ArrayList<Double> fitness(ArrayList<ArrayList<Integer>> pop){
             for(int i=0;i<pop.size();i++){
                 int count = 0;
-                for(int j=0;i<pop.get(i).size();j++){
+                for(int j=0;j<pop.get(i).size();j++){
                     if(pop.get(i).get(j) != 4) count++;
                 }
                 Double fit = 1.0/count;
@@ -156,14 +158,15 @@ public class Model {
                 else if(mov.get(k) == 2) i--;
                 else if(mov.get(k) == 3) j++;
                 else { i=i; j=j;}
+                if(i == fin.getI() && j == fin.getJ()){ 
+                    return true; 
+                }
             }
-            if(i == fin.getI() && j == fin.getJ()) return true;
-            else return false;
+            return false;
         }
         
         //A movement is valid
         public boolean isMovementValid(int x, int y, int mov){
-            int [][] hashMove = {{0,1,-1,0,0},{-1,0,0,1,0}};
             if(mapeoTablero[x+hashMove[0][mov]][y+hashMove[1][mov]] == 1) return true;
             else return false;
         }
@@ -527,9 +530,14 @@ public class Model {
 				}
 			}
 			//System.out.println("START:"+ini+""+end);
-			ini.getCamino(camino,fin);
+			//ini.getCamino(camino,fin);
 			//System.out.println(camino);
 		}
+                camino.add(initial);
+                ArrayList<Integer> movimiento = pop.get(0);
+                for(int i:movimiento){
+                    camino.add(buscarVecino(camino.getLast().getI()+hashMove[0][i], camino.getLast().getJ()+hashMove[1][i]));
+                }
 		return camino;
 	}
 
