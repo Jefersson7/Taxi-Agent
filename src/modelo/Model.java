@@ -65,11 +65,11 @@ public class Model {
         //Generates a movement population.
         public void generarPoblacion(Nodo initial, Nodo fin){
             Random rmd = new Random();
-            for(int i=0;i<1;i++){
+            for(int i=0;i<50;i++){
                 int x = initial.getI();
                 int y = initial.getJ();
                 ArrayList<Integer> mov = new ArrayList<Integer>();
-                for (int j=0;j<10;j++){
+                for (int j=0;j<100;j++){
                     int mv = rmd.nextInt(5);
                     while(!isMovementValid(x,y,mv)){
                         mv = rmd.nextInt(5);
@@ -146,6 +146,8 @@ public class Model {
                 p3.add(p2.get(i));
                 p4.add(p1.get(i));
             }
+            newpop.add(p3);
+            newpop.add(p4);
         }
         
         //The movement route function
@@ -514,9 +516,31 @@ public class Model {
 	}
 
 	public LinkedList<Nodo> getCamino(Nodo initial, Nodo end) {
+                Random rnd = new Random();
                 generarPoblacion(initial, end);
-                fitness(pop);
-                select(Fitness);
+                for(int i=0;i<60;i++){
+                    fitness(pop);
+                    for(int j=0;j<pop.size()/2;j++){
+                        int a = select(Fitness);
+                        int b = select(Fitness);
+                        crossover(pop.get(a), pop.get(b));
+                    }
+                    //Función de mutación.
+                    int x = initial.getI();
+                    int y = initial.getJ();
+                    for(int j=0;j<newpop.size();j++){
+                        for(int k=0;k<newpop.get(i).size();k++){
+                            while(!isMovementValid(x,y,newpop.get(i).get(k))){ //Verificar si el movimiento en newpop es valido
+                                newpop.get(i).set(k, rnd.nextInt(5));//Generar un nuevo movimiento en esa indice
+                            }
+                            x += hashMove[0][newpop.get(i).get(k)]; //Mover x
+                            y += hashMove[0][newpop.get(i).get(k)]; // Mover y
+                        }
+                    }
+                    //función de seleccion (Reemplazar pop con newpop)
+                    pop.clear();
+                    pop = newpop;
+                }
 		LinkedList<Nodo> camino = new LinkedList<Nodo>();
 		if(!initial.equals(end)){
 			Nodo ini = null;
