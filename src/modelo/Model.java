@@ -99,6 +99,7 @@ public class Model {
         }
         //Computes the fitness of each chromosome.
         public ArrayList<Double> fitness(ArrayList<ArrayList<Integer>> pop){
+            Fitness.clear();
             for(int i=0;i<pop.size();i++){
                 int count = 0;
                 for(int j=0;j<pop.get(i).size();j++){
@@ -541,6 +542,9 @@ public class Model {
                     pop.clear();
                     pop = newpop;
                 }
+                //Seleccionar el mejor camino generado mediante fitness.
+                fitness(pop);
+                int seleccionarCamino = select(Fitness);
 		LinkedList<Nodo> camino = new LinkedList<Nodo>();
 		if(!initial.equals(end)){
 			Nodo ini = null;
@@ -558,7 +562,7 @@ public class Model {
 			//System.out.println(camino);
 		}
                 camino.add(initial);
-                ArrayList<Integer> movimiento = pop.get(0);
+                ArrayList<Integer> movimiento = pop.get(seleccionarCamino);
                 for(int i:movimiento){
                     camino.add(buscarVecino(camino.getLast().getI()+hashMove[0][i], camino.getLast().getJ()+hashMove[1][i]));
                 }
