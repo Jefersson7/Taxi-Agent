@@ -62,12 +62,18 @@ public class Model {
 
 	}
         //Generates a movement population.
-        public void generarPoblacion(){
+        public void generarPoblacion(Nodo initial, Nodo fin){
             Random rmd = new Random();
             for(int i=0;i<80;i++){
                 ArrayList<Integer> mov = new ArrayList<Integer>();
                 for (int j=0;j<100;j++){
                     mov.add(rmd.nextInt(5));
+                }
+                while(!isValid(initial, fin, mov)){
+                    mov.clear();
+                    for(int j=0;j<100;j++){
+                        mov.add(rmd.nextInt(5));
+                    }
                 }
                 pop.add(mov);
             }
@@ -121,6 +127,21 @@ public class Model {
                 p3.add(p2.get(i));
                 p4.add(p1.get(i));
             }
+        }
+        
+        //The movement route function
+        public boolean isValid(Nodo initial, Nodo fin, ArrayList<Integer> mov){
+            int i = initial.getI();
+            int j = initial.getJ();
+            for(int k=0;k<mov.size();k++){
+                if(mov.get(k) == 0) j++;
+                else if(mov.get(k) == 1) i++;
+                else if(mov.get(k) == 2) i--;
+                else if(mov.get(k) == 3) j--;
+                else { i=i; j=j;}
+            }
+            if(i == fin.getI() && j == fin.getJ()) return true;
+            else return false;
         }
 	//The Thread for play
 	public void play(){
@@ -466,7 +487,7 @@ public class Model {
 	}
 
 	public LinkedList<Nodo> getCamino(Nodo initial, Nodo end) {
-                generarPoblacion();
+                generarPoblacion(initial, end);
                 fitness(pop);
                 select(Fitness);
 		LinkedList<Nodo> camino = new LinkedList<Nodo>();
