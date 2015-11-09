@@ -108,8 +108,19 @@ public class Model {
         public void crossover(ArrayList<Integer> p1, ArrayList<Integer> p2){
             Random rnd = new Random();
             int divisor = rnd.nextInt(p1.size());
+            while (divisor!=9){
+                divisor = rnd.nextInt(p1.size());
+            }
             ArrayList<Integer> p3 = new ArrayList<Integer>();
             ArrayList<Integer> p4 = new ArrayList<Integer>();
+            for(int i=0;i<=divisor;i++){
+                p3.add(p1.get(i));
+                p4.add(p2.get(i));
+            }
+            for(int i=divisor+1;i<p1.size();i++){
+                p3.add(p2.get(i));
+                p4.add(p1.get(i));
+            }
         }
 	//The Thread for play
 	public void play(){
