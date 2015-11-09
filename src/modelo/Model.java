@@ -63,15 +63,32 @@ public class Model {
 	}
         //Generates a movement population.
         public void generarPoblacion(Nodo initial, Nodo fin){
+            int [][] hashMove = {{0,1,-1,0,0},{-1,0,0,1,0}};
             Random rmd = new Random();
             for(int i=0;i<80;i++){
+                int x = initial.getI();
+                int y = initial.getJ();
                 ArrayList<Integer> mov = new ArrayList<Integer>();
                 for (int j=0;j<100;j++){
-                    mov.add(rmd.nextInt(5));
+                    int mv = rmd.nextInt(5);
+                    while(!isMovementValid(x,y,mv)){
+                        mv = rmd.nextInt(5);
+                    }
+                    x += hashMove[0][mv];
+                    y += hashMove[1][mv];
+                    mov.add(mv);
                 }
                 while(!isValid(initial, fin, mov)){
                     mov.clear();
+                    x = initial.getI();
+                    y = initial.getJ();
                     for(int j=0;j<100;j++){
+                        int mv = rmd.nextInt(5);
+                        while(!isMovementValid(x,y,mv)){
+                            mv = rmd.nextInt(5);
+                        }
+                        x+=hashMove[0][mv];
+                        y+=hashMove[1][mv];
                         mov.add(rmd.nextInt(5));
                     }
                 }
@@ -134,13 +151,20 @@ public class Model {
             int i = initial.getI();
             int j = initial.getJ();
             for(int k=0;k<mov.size();k++){
-                if(mov.get(k) == 0) j++;
+                if(mov.get(k) == 0) j--;
                 else if(mov.get(k) == 1) i++;
                 else if(mov.get(k) == 2) i--;
-                else if(mov.get(k) == 3) j--;
+                else if(mov.get(k) == 3) j++;
                 else { i=i; j=j;}
             }
             if(i == fin.getI() && j == fin.getJ()) return true;
+            else return false;
+        }
+        
+        //A movement is valid
+        public boolean isMovementValid(int x, int y, int mov){
+            int [][] hashMove = {{0,1,-1,0,0},{-1,0,0,1,0}};
+            if(mapeoTablero[x+hashMove[0][mov]][y+hashMove[1][mov]] == 1) return true;
             else return false;
         }
 	//The Thread for play
