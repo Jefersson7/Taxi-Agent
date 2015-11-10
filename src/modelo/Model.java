@@ -51,13 +51,7 @@ public class Model {
 		//Method Public
 		//createPasagero();
 		createPasagero();
-		createPasagero();
-		createPasagero();
-		createPasagero();
-                createPasagero();
-		createPasagero();
-		createPasagero();
-		createPasagero();
+
 		createTaxi();
                
 
@@ -93,7 +87,6 @@ public class Model {
                     }
                    
                 }*/
-                System.out.println(mov);
                 pop.add(mov);
             }
         }
@@ -530,17 +523,20 @@ public class Model {
                     int x = initial.getI();
                     int y = initial.getJ();
                     for(int j=0;j<newpop.size();j++){
-                        for(int k=0;k<newpop.get(i).size();k++){
-                            while(!isMovementValid(x,y,newpop.get(i).get(k))){ //Verificar si el movimiento en newpop es valido
-                                newpop.get(i).set(k, rnd.nextInt(5));//Generar un nuevo movimiento en esa indice
+                        for(int k=0;k<newpop.get(j).size();k++){
+                            while(!isMovementValid(x,y,newpop.get(j).get(k))){ //Verificar si el movimiento en newpop es valido
+                                newpop.get(j).set(k, rnd.nextInt(5));//Generar un nuevo movimiento en esa indice
                             }
-                            x += hashMove[0][newpop.get(i).get(k)]; //Mover x
-                            y += hashMove[0][newpop.get(i).get(k)]; // Mover y
+                            x += hashMove[0][newpop.get(j).get(k)]; //Mover x
+                            y += hashMove[0][newpop.get(j).get(k)]; // Mover y
                         }
                     }
                     //función de seleccion (Reemplazar pop con newpop)
                     pop.clear();
-                    pop = newpop;
+                    for(int j=0;j<newpop.size();j++){
+                        pop.add(newpop.get(j));
+                    }
+                    newpop.clear();
                 }
                 //Seleccionar el mejor camino generado mediante fitness.
                 fitness(pop);
